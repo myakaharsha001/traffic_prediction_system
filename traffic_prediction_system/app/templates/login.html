@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Login — ProbTraffic{% endblock %}
+{% block content %}
+<section class="auth-page">
+  <div class="auth-card">
+    <span class="eyebrow">WELCOME BACK</span><h1>Sign in</h1><p>Access your traffic intelligence dashboard.</p>
+    <form method="post">
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="btn primary full">Sign In</button>
+    </form>
+    <p class="auth-foot">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </div>
+</section>
+{% endblock %}

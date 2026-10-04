@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}Traffic Prediction — ProbTraffic{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}
+<section class="container page-head"><div><span class="eyebrow">PROBABILITY ENGINE</span><h1>Predict traffic</h1><p>Combine measured road evidence with location and weather intelligence.</p></div><a class="btn ghost" href="{{url_for('main.intelligence')}}">Open Intelligence</a></section>
+<section class="container prediction-layout">
+<form class="panel prediction-form" method="post"><input type="hidden" name="_csrf" value="{{csrf_token()}}">
+<div class="section-label">LOCATION</div><div class="location-tools"><input id="locationSearch" name="location" value="{{ reopen_data.location if reopen_data else '' }}" placeholder="Search road, area, landmark or PIN" required><button class="btn ghost" type="button" id="gpsBtn">Use Current Location</button></div><div id="searchResults" class="search-results"></div>
+<div class="map-mini" id="predictionMap"></div><div class="coord-row"><span>Lat: <b id="latText">{{ "%.5f"|format(reopen_data.latitude) if reopen_data and reopen_data.latitude is not none else "—" }}</b></span><span>Lon: <b id="lonText">{{ "%.5f"|format(reopen_data.longitude) if reopen_data and reopen_data.longitude is not none else "—" }}</b></span></div>
+<input type="hidden" name="latitude" id="latitude" value="{{ reopen_data.latitude if reopen_data and reopen_data.latitude is not none else '' }}"><input type="hidden" name="longitude" id="longitude" value="{{ reopen_data.longitude if reopen_data and reopen_data.longitude is not none else '' }}">
+<div class="form-grid">
+<label>Vehicle count<input type="number" name="vehicle_count" value="{{ reopen_data.vehicle_count if reopen_data else '' }}" min="0" max="10000" placeholder="850" required></label>
+<label>Average speed (km/h)<input type="number" step=".1" name="average_speed" value="{{ reopen_data.average_speed if reopen_data else '' }}" min=".1" max="200" placeholder="22" required></label>
+<label>Time period<select name="time_of_day" required><option value="">Select</option>{% for x in ["Morning Peak","Midday","Evening Peak","Night"] %}<option {% if reopen_data and reopen_data.time_of_day==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></label>
+<label>Weather<select name="weather" id="weatherSelect" required><option value="">Select</option>{% for x in ["Clear","Cloudy","Rain","Heavy Rain","Fog","Storm"] %}<option {% if reopen_data and reopen_data.weather==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></label>
+<label>Incident<select name="incident" required>{% for x in ["None","Minor Accident","Major Accident","Road Closure","Vehicle Breakdown","Construction","Traffic Jam","Weather Hazard","Other"] %}<option {% if reopen_data and reopen_data.incident==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></label>
+<label>Road condition<select name="road_condition" required>{% for x in ["Good","Wet","Poor","Damaged"] %}<option {% if reopen_data and reopen_data.road_condition==x %}selected{% endif %}>{{x}}</option>{% endfor %}</select></label>
+<label>Visibility (km)<input type="number" step=".1" min="0" name="visibility" value="{{ reopen_data.visibility if reopen_data else '' }}" id="visibility" placeholder="Optional"></label>
+<label>Humidity (%)<input type="number" step=".1" min="0" max="100" name="humidity" value="{{ reopen_data.humidity if reopen_data else '' }}" id="humidity" placeholder="Optional"></label>
+<label>Wind speed (km/h)<input type="number" step=".1" min="0" name="wind_speed" value="{{ reopen_data.wind_speed if reopen_data else '' }}" id="wind_speed" placeholder="Optional"></label>
+</div><div id="weatherCard" class="weather-card hidden"></div><button class="btn primary full" type="submit">Calculate & Save Prediction</button>
+</form>
+<div class="panel result-panel">{% if result %}
+<span class="eyebrow">RESULT</span><div class="result-condition {{result.predicted|lower}}"><span>Most likely traffic state</span><strong>{{result.predicted}}</strong><b>{{result.confidence}}% confidence</b></div>
+<div class="prob-detail">{% for name,value in [("Low",result.low),("Moderate",result.moderate),("High",result.high),("Severe",result.severe)] %}<div class="prob-line"><div><span>{{name}}</span><b>{{value}}%</b></div><div class="bar"><i style="width:{{value}}%"></i></div></div>{% endfor %}</div>
+<div class="panel-inset"><span class="eyebrow">WHY?</span>{% for e in result.evidence %}<div class="evidence"><div><span>{{e.label}}</span><b>{{e.strength}}%</b></div><div class="bar"><i style="width:{{e.strength}}%"></i></div><small>{{e.detail}}</small></div>{% endfor %}<p class="explain">{{result.explanation}}</p></div>
+{% else %}<div class="result-placeholder"><div class="placeholder-icon">P</div><h2>Your prediction appears here</h2><p>Submit real or recorded road evidence. The engine will return four normalized probabilities and its reasoning.</p></div>{% endif %}</div></section>
+{% endblock %}
+{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="{{url_for('static',filename='js/intelligence.js')}}"></script>{% endblock %}

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ProbTraffic V2{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">{% block head %}{% endblock %}</head>
+<body>
+<nav class="navbar"><a class="brand" href="{{ url_for('main.index') }}"><span class="brand-mark">P</span><span>ProbTraffic <small>V2</small></span></a>
+<div class="nav-links">{% if current_user.is_authenticated %}
+<a href="{{url_for('main.dashboard')}}">Dashboard</a><a href="{{url_for('main.prediction')}}">Predict</a><a href="{{url_for('main.intelligence')}}">Intelligence</a><a href="{{url_for('main.map_view')}}">Map</a><a href="{{url_for('main.history')}}">History</a><a href="{{url_for('main.reports')}}">Reports</a>
+{% if current_user.role=='admin' %}<a href="{{url_for('admin.dashboard')}}">Admin</a>{% endif %}<a class="nav-cta" href="{{url_for('auth.logout')}}">Logout</a>
+{% else %}<a href="{{url_for('auth.login')}}">Login</a><a class="nav-cta" href="{{url_for('auth.register')}}">Get Started</a>{% endif %}</div></nav>
+<main>{% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-wrap">{% for category,message in messages %}<div class="flash {{category}}">{{message}}</div>{% endfor %}</div>{% endif %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer><span>ProbTraffic V2</span> · Probability reasoning for smarter traffic decisions · <a href="{{url_for('main.index')}}">Data & model transparency</a></footer>
+<script>window.CSRF_TOKEN="{{csrf_token()}}";</script><script src="{{url_for('static',filename='js/main.js')}}"></script>{% block scripts %}{% endblock %}
+</body></html>

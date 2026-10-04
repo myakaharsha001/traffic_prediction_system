@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}ProbTraffic — Traffic Prediction{% endblock %}
+{% block content %}
+<section class="hero container">
+  <div class="hero-copy">
+    <span class="eyebrow">PROBABILITY-DRIVEN TRAFFIC INTELLIGENCE</span>
+    <h1>Predict traffic with <span>probability,</span> not guesswork.</h1>
+    <p>ProbTraffic combines current road conditions with transparent probabilistic reasoning to estimate the likelihood of Low, Moderate, High, and Severe congestion.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="{{ url_for('auth.register') }}">Start Predicting</a>
+      <a class="btn ghost" href="{{ url_for('auth.login') }}">Sign In</a>
+    </div>
+    <div class="mini-stats">
+      <div><strong>4</strong><span>traffic states</span></div>
+      <div><strong>6+</strong><span>evidence factors</span></div>
+      <div><strong>100%</strong><span>interpretable</span></div>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="card-top"><span>LIVE REASONING</span><span class="pulse"></span></div>
+    <div class="traffic-orb"><div class="orb-ring"></div><div class="orb-core">68%</div></div>
+    <h3>High Traffic</h3>
+    <p>Predicted from current evidence</p>
+    <div class="prob-bars">
+      <div><span>Low</span><i style="width:8%"></i><b>8%</b></div>
+      <div><span>Moderate</span><i style="width:18%"></i><b>18%</b></div>
+      <div><span>High</span><i style="width:68%"></i><b>68%</b></div>
+      <div><span>Severe</span><i style="width:6%"></i><b>6%</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="container section">
+  <div class="section-heading"><span class="eyebrow">HOW IT WORKS</span><h2>From evidence to an explainable prediction.</h2></div>
+  <div class="steps">
+    <article><span>01</span><h3>Collect</h3><p>Capture vehicle volume, speed, time, weather, incidents and road condition.</p></article>
+    <article><span>02</span><h3>Reason</h3><p>Apply weighted probability updates to each possible traffic state.</p></article>
+    <article><span>03</span><h3>Predict</h3><p>Normalize the scores and identify the most probable condition.</p></article>
+  </div>
+</section>
+{% endblock %}

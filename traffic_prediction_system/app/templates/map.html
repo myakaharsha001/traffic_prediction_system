@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Traffic Map — ProbTraffic{% endblock %}{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}<section class="container page-head"><div><span class="eyebrow">MAP INTELLIGENCE</span><h1>Traffic map</h1><p>Recorded prediction locations and active incidents.</p></div></section><section class="container panel map-panel"><div id="map" class="big-map"></div><p class="muted">Click the map to inspect coordinates. Active incident markers are loaded from the server.</p></section>{% endblock %}
+{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const m=L.map("map").setView([20.5937,78.9629],5);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors"}).addTo(m);
+const points={{locations|tojson}};points.forEach(x=>L.marker([x.lat,x.lon]).addTo(m).bindPopup("<b>"+x.name.replaceAll("<","&lt;")+"</b>"));
+fetch("{{url_for('main.api_incidents')}}").then(r=>r.json()).then(d=>d.incidents.forEach(i=>L.circleMarker([i.lat,i.lon],{radius:9}).addTo(m).bindPopup("<b>"+i.title+"</b><br>"+i.type+" · "+i.severity+"<br>"+(i.description||""))));
+</script>{% endblock %}

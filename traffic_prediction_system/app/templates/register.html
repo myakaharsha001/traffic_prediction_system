@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Register — ProbTraffic{% endblock %}
+{% block content %}
+<section class="auth-page">
+  <div class="auth-card">
+    <span class="eyebrow">CREATE ACCOUNT</span><h1>Get started</h1><p>Build your own prediction history.</p>
+    <form method="post">
+      <label>Name<input type="text" name="name" required minlength="2"></label>
+      <label>Email<input type="email" name="email" required></label>
+      <label>Password<input type="password" name="password" required minlength="8"></label>
+      <label>Confirm password<input type="password" name="confirm_password" required minlength="8"></label>
+      <button class="btn primary full">Create Account</button>
+    </form>
+    <p class="auth-foot">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}
